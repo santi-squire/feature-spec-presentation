@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feature Spec Skills — Mobile Commander</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0D0D0D; --surface: #1A1A1A; --surface-2: #262626;
+      --border: #333333; --text: #FFFFFF; --text-muted: #B3B3B3;
+      --accent: #007FFF; --accent-light: #279FFF;
+      --green: #31AD5A; --green-bg: rgba(49,173,90,0.16);
+      --orange: #F4983B; --orange-bg: rgba(244,152,59,0.16);
+      --red: #EB4646; --red-bg: rgba(235,70,70,0.16);
+      --blue: #007FFF; --blue-bg: rgba(0,127,255,0.16);
+      --gradient: linear-gradient(135deg, #007FFF, #279FFF, #56B0FF);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+    .slide {
+      min-height: 100vh; display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      padding: 4rem 3rem; max-width: 1060px; margin: 0 auto; text-align: center;
+    }
+    .dots-nav {
+      position: fixed; right: 1.2rem; top: 50%; transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: 0.6rem; z-index: 100;
+    }
+    .dots-nav a {
+      width: 9px; height: 9px; border-radius: 50%; background: var(--border);
+      display: block; transition: all 0.3s;
+    }
+    .dots-nav a:hover, .dots-nav a.active { background: var(--accent-light); transform: scale(1.4); }
+
+    .label {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.18em; color: var(--accent-light); margin-bottom: 1rem;
+    }
+    h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.12; margin-bottom: 1.2rem; }
+    h1 .g { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    h2 { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 800; line-height: 1.2; margin-bottom: 0.8rem; }
+    .sub { font-size: 1.05rem; color: var(--text-muted); max-width: 600px; margin-bottom: 2rem; }
+
+    .pill {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+      padding: 0.5rem 1rem; font-size: 0.9rem; font-weight: 700; color: var(--accent-light);
+    }
+    .pill .sl { color: var(--text-muted); }
+
+    /* Bullet list */
+    .bullets {
+      text-align: left; width: 100%;
+      display: flex; flex-direction: column; gap: 0.8rem; margin-top: 1rem;
+    }
+    .bullets li {
+      list-style: none; font-size: 1rem; display: flex; align-items: flex-start; gap: 0.6rem; line-height: 1.5;
+    }
+    .bullets li .b { flex-shrink: 0; font-size: 1.1rem; }
+
+    /* Compare */
+    .cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; width: 100%; margin-top: 1rem; }
+    @media (max-width: 700px) { .cmp { grid-template-columns: 1fr; } }
+    .cmp-panel {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      padding: 1.8rem; position: relative; overflow: hidden; text-align: left;
+    }
+    .cmp-panel .tag {
+      position: absolute; top: 0; left: 0; right: 0;
+      padding: 0.4rem; font-size: 0.65rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.14em; text-align: center;
+    }
+    .cmp-before .tag { background: var(--red-bg); color: var(--red); }
+    .cmp-after .tag { background: var(--green-bg); color: var(--green); }
+    .cmp-panel ul { list-style: none; padding-top: 1.8rem; display: flex; flex-direction: column; gap: 0.6rem; }
+    .cmp-panel li { font-size: 0.88rem; display: flex; align-items: flex-start; gap: 0.5rem; line-height: 1.5; }
+    .cmp-panel li .b { flex-shrink: 0; font-size: 1rem; }
+    .cmp-before li { color: var(--text-muted); }
+
+    /* Flow */
+    .flow-row {
+      display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;
+      justify-content: center; margin: 1.5rem 0;
+    }
+    .fb {
+      padding: 0.7rem 1.2rem; border-radius: 10px; font-size: 0.82rem;
+      font-weight: 600; border: 1px solid; text-align: center;
+    }
+    .fb.src { background: var(--blue-bg); border-color: rgba(116,185,255,0.25); color: var(--blue); }
+    .fb.sk { background: rgba(108,92,231,0.12); border-color: rgba(108,92,231,0.25); color: var(--accent-light); }
+    .fb.out { background: var(--green-bg); border-color: rgba(0,184,148,0.25); color: var(--green); }
+    .fb.dst { background: var(--orange-bg); border-color: rgba(253,203,110,0.25); color: var(--orange); }
+    .fa { color: var(--text-muted); font-size: 1.3rem; }
+
+    /* Stats */
+    .stats { display: flex; gap: 3rem; justify-content: center; flex-wrap: wrap; margin: 2rem 0; }
+    .st { text-align: center; }
+    .st .n {
+      font-size: 2.5rem; font-weight: 900; line-height: 1.1;
+      background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .st .l { font-size: 0.8rem; color: var(--text-muted); }
+
+    /* Preview button */
+    .preview-btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px;
+      padding: 0.45rem 0.9rem; font-size: 0.75rem; font-weight: 600;
+      color: var(--accent-light); cursor: pointer; transition: all 0.2s; font-family: inherit;
+    }
+    .preview-btn:hover { border-color: var(--accent); background: rgba(108,92,231,0.1); }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+      z-index: 200; display: none; justify-content: center; align-items: center; padding: 2rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+      max-width: 780px; width: 100%; max-height: 85vh; overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); background: var(--surface-2);
+    }
+    .modal-header h3 { font-size: 0.95rem; font-weight: 700; }
+    .modal-close {
+      background: none; border: none; color: var(--text-muted); font-size: 1.3rem;
+      cursor: pointer; padding: 0.3rem; line-height: 1;
+    }
+    .modal-close:hover { color: var(--text); }
+    .modal-body {
+      padding: 1.5rem; overflow-y: auto; font-size: 0.82rem; line-height: 1.7;
+    }
+    .modal-body h4 { font-size: 0.88rem; font-weight: 700; margin: 1rem 0 0.3rem; color: var(--text); }
+    .modal-body h4:first-child { margin-top: 0; }
+    .modal-body p { color: var(--text-muted); margin-bottom: 0.4rem; }
+    .modal-body table {
+      width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.78rem;
+    }
+    .modal-body th, .modal-body td { padding: 0.45rem 0.7rem; border: 1px solid var(--border); text-align: left; }
+    .modal-body th { background: var(--surface-2); color: var(--text-muted); font-weight: 600; font-size: 0.7rem; text-transform: uppercase; }
+    .modal-body code { background: var(--surface-2); padding: 0.1rem 0.35rem; border-radius: 3px; font-size: 0.74rem; color: var(--accent-light); }
+    .modal-body hr { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
+    .modal-body .tag-done { color: var(--green); font-weight: 600; }
+    .modal-body .tag-partial { color: var(--orange); font-weight: 600; }
+    .modal-body .tag-missing { color: var(--red); font-weight: 600; }
+    .modal-body .ac { display: flex; align-items: flex-start; gap: 0.5rem; padding: 0.2rem 0; color: var(--text-muted); }
+    .modal-body .ac-box { width: 14px; height: 14px; border: 2px solid var(--border); border-radius: 3px; flex-shrink: 0; margin-top: 3px; }
+    .modal-tag { font-size: 0.6rem; font-weight: 600; padding: 0.15rem 0.5rem; border-radius: 100px; margin-left: 0.5rem; }
+
+    .fi { opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; }
+    .fi.vis { opacity: 1; transform: translateY(0); }
+
+    .card-accent {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      padding: 2rem; width: 100%; text-align: center; margin-top: 1.5rem;
+      border-color: var(--accent); background: rgba(0,127,255,0.05);
+    }
+
+    /* Terminal mock */
+    .term {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      overflow: hidden; width: 100%; margin-top: 1.5rem; text-align: left;
+    }
+    .term-bar {
+      background: var(--surface-2); padding: 0.45rem 1rem; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 6px; font-size: 0.68rem; color: var(--text-muted);
+    }
+    .term-bar .d { display: flex; gap: 5px; }
+    .term-bar .d span { width: 9px; height: 9px; border-radius: 50%; }
+    .term-bar .d .r { background: #EB4646; }
+    .term-bar .d .y { background: #F4983B; }
+    .term-bar .d .gr { background: #31AD5A; }
+    .term-body {
+      padding: 1rem 1.2rem; font-family: 'Courier New', monospace; font-size: 0.78rem;
+      line-height: 1.8; color: var(--text-muted); white-space: pre-wrap;
+    }
+    .term-body .cmd { color: var(--text); }
+    .term-body .hi { color: var(--accent-light); font-weight: 600; }
+    .term-body .ok { color: var(--green); }
+    .term-body .hl { color: var(--orange); }
+    .term-body .fl { color: var(--blue); }
+  </style>
+</head>
+<body>
+
+<div class="dots-nav">
+  <a href="#s1" class="active"></a>
+  <a href="#s2"></a>
+  <a href="#s3"></a>
+  <a href="#s4"></a>
+  <a href="#s5"></a>
+</div>
+
+<!-- ===== SLIDE 1: Title ===== -->
+<div class="slide" id="s1">
+  <p class="label">Mobile Commander</p>
+  <h1>
+    One feature, three platforms,<br />
+    <span class="g">zero documentation</span>
+  </h1>
+  <p class="sub">
+    Web Commander and iOS Commander have the same features with different behavior.
+    We're porting them to Mobile &mdash; but nothing is documented.
+  </p>
+  <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+    <div class="pill"><span class="sl">/</span>feature-spec</div>
+    <div class="pill"><span class="sl">/</span>upload-jira</div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 2: Problem → Solution (compact) ===== -->
+<div class="slide fi" id="s2">
+  <p class="label">Before vs. Now</p>
+  <h2>What changed</h2>
+
+  <div class="cmp">
+    <div class="cmp-panel cmp-before">
+      <div class="tag">Before</div>
+      <ul>
+        <li><span class="b">&#10060;</span> Jira tickets with just a title</li>
+        <li><span class="b">&#10060;</span> No visibility into Web vs iOS differences</li>
+        <li><span class="b">&#10060;</span> No acceptance criteria or testing steps</li>
+        <li><span class="b">&#10060;</span> Engineers re-read legacy code every time</li>
+        <li><span class="b">&#10060;</span> QA asks "what should I test?"</li>
+        <li><span class="b">&#10060;</span> Knowledge lost when people leave</li>
+      </ul>
+    </div>
+    <div class="cmp-panel cmp-after">
+      <div class="tag">Now</div>
+      <ul>
+        <li><span class="b">&#9989;</span> 10 Jira fields filled automatically &mdash; zero manual entry</li>
+        <li><span class="b">&#9989;</span> Web &amp; iOS reconciled in one spec</li>
+        <li><span class="b">&#9989;</span> Acceptance criteria + testing steps</li>
+        <li><span class="b">&#9989;</span> Engineers implement from the spec</li>
+        <li><span class="b">&#9989;</span> QA self-sufficient from day 1</li>
+        <li><span class="b">&#9989;</span> Knowledge lives in Jira forever</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 3: How it works ===== -->
+<div class="slide fi" id="s3">
+  <p class="label">How it works</p>
+  <h2>The process</h2>
+
+  <div class="flow-row">
+    <div class="fb src">Jira Tickets</div>
+    <div class="fa">&#8594;</div>
+    <div class="fb sk">/feature-spec</div>
+    <div class="fa">&#8594;</div>
+    <div class="fb out">2 docs</div>
+    <div class="fa">&#8594;</div>
+    <div class="fb dst">/upload-jira</div>
+  </div>
+
+  <ul class="bullets">
+    <li><span class="b" style="color: var(--blue);">1.</span>
+      <div><strong>Have the Jira tickets</strong><br/><span style="color: var(--text-muted);">With the features/flows to document. Even just a title works.</span></div>
+    </li>
+    <li><span class="b" style="color: var(--blue);">2.</span>
+      <div><strong>Run /feature-spec</strong><br/><span style="color: var(--text-muted);">Claude reads Web Commander, cross-references iOS, checks Mobile status.</span></div>
+    </li>
+    <li><span class="b" style="color: var(--blue);">3.</span>
+      <div>
+        <strong>Two docs generated</strong>
+        <button class="preview-btn" onclick="openModal('spec-modal')" style="margin-left: 0.3rem;">&#128220; Spec (devs)</button>
+        <button class="preview-btn" onclick="openModal('jira-modal')" style="margin-left: 0.3rem;">&#127919; Jira (QA)</button>
+      </div>
+    </li>
+    <li><span class="b" style="color: var(--blue);">4.</span>
+      <div><strong>Run /upload-jira</strong><br/><span style="color: var(--text-muted);">Automatically fills 10 Jira fields per ticket. You just confirm.</span></div>
+    </li>
+  </ul>
+
+  <!-- Example run -->
+  <div class="term">
+    <div class="term-bar">
+      <div class="d"><span class="r"></span><span class="y"></span><span class="gr"></span></div>
+      <span style="margin-left: auto;">claude-code</span>
+    </div>
+    <div class="term-body"><span class="cmd">$</span> <span class="hi">/feature-spec</span> <span class="ok">Appointments</span>
+
+<span class="hi">&#9654; Discovering feature across codebases...</span>
+  <span class="fl">&#10003; Web Commander</span>   squire-app/frontend/js/app/main/appointments/
+  <span class="fl">&#10003; iOS Commander</span>   ios-commander/.../Flows/Appointments/
+  <span class="fl">&#10003; Mobile Commander</span> src/screens/appointments/ <span class="hl">(partial)</span>
+
+<span class="hi">&#9654; Analyzing 5 flows...</span>  Create, Edit, Cancel, Detail, Recurring
+
+<span class="hi">&#9654; Extracting APIs, permissions, validations, edge cases...</span>
+
+<span class="ok">&#10003; Generated:</span>
+  <span class="fl">docs/appointments_spec.md</span>   &#8592; Technical spec (for devs)
+  <span class="fl">docs/appointments_jira.md</span>  &#8592; Jira tasks (for QA)
+
+<span class="cmd">$</span> <span class="hi">/upload-jira</span> <span class="ok">SQR-3200, SQR-3201, SQR-3202</span>
+
+<span class="hi">&#9654; Matching tasks to tickets...</span>
+  SQR-3200 &#8594; Create Appointment
+  SQR-3201 &#8594; Cancel Appointment
+  SQR-3202 &#8594; Recurring Appointment
+
+<span class="ok">&#10003; 3 tickets updated automatically</span>
+  <span class="fl">description, acceptance criteria, testing notes,
+  integration testing, release notes, permissions...</span></div>
+  </div>
+
+  <div class="stats" style="margin-top: 2rem;">
+    <div class="st"><div class="n">~10min</div><div class="l">/feature-spec</div></div>
+    <div class="st"><div class="n">~3min</div><div class="l">/upload-jira</div></div>
+    <div class="st"><div class="n">10</div><div class="l">Jira fields per ticket</div></div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 4: Benefits ===== -->
+<div class="slide fi" id="s4">
+  <p class="label">Benefits</p>
+  <h2>Why use it</h2>
+
+  <ul class="bullets">
+    <li><span class="b" style="color: var(--green);">&#9989;</span>
+      <div><strong>Document features without touching code</strong><br/><span style="color: var(--text-muted);">Existing Web &amp; iOS codebases are the input. Features end up documented in Jira and trackable.</span></div>
+    </li>
+    <li><span class="b" style="color: var(--green);">&#9989;</span>
+      <div><strong>Stop asking Product what's already defined</strong><br/><span style="color: var(--text-muted);">Behavior, permissions, validations, and edge cases are already coded. Claude extracts them directly.</span></div>
+    </li>
+    <li><span class="b" style="color: var(--green);">&#9989;</span>
+      <div><strong>QA gets a complete testing framework</strong><br/><span style="color: var(--text-muted);">Acceptance criteria, testing notes, integration scenarios, and expected results. All non-technical.</span></div>
+    </li>
+    <li><span class="b" style="color: var(--green);">&#9989;</span>
+      <div><strong>Platform differences become visible</strong><br/><span style="color: var(--text-muted);">Where Web and iOS disagree, it's flagged and decided explicitly instead of discovered during dev.</span></div>
+    </li>
+    <li><span class="b" style="color: var(--green);">&#9989;</span>
+      <div><strong>Repeatable</strong><br/><span style="color: var(--text-muted);">Requirements changed? Re-run, re-upload. The whole pipeline takes minutes.</span></div>
+    </li>
+  </ul>
+</div>
+
+<!-- ===== SLIDE 5: Two commands, that's it ===== -->
+<div class="slide fi" id="s5">
+  <p class="label">Available Now</p>
+  <h2>Two commands, that's it</h2>
+
+  <div style="display: flex; flex-direction: column; gap: 1.2rem; align-items: center; margin: 1.5rem 0;">
+    <div class="pill" style="font-size: 1.1rem; padding: 0.7rem 1.5rem;">
+      <span class="sl">/</span>feature-spec &lt;FeatureName&gt;
+    </div>
+    <div class="pill" style="font-size: 1.1rem; padding: 0.7rem 1.5rem;">
+      <span class="sl">/</span>upload-jira &lt;TICKET-IDs&gt;
+    </div>
+  </div>
+
+  <div class="card-accent">
+    <p style="font-size: 1rem; color: var(--text); max-width: 550px; margin: 0 auto;">
+      Before we had <strong>nothing</strong> documented in Jira.<br />
+      Now every feature gets a reconciled spec and<br />
+      fully populated tickets &mdash; in under 15 minutes.
+    </p>
+  </div>
+
+  <div style="margin-top: 2rem; color: var(--text-muted); font-size: 0.8rem;">
+    Built by Santiago &amp; Nicolas<br/>
+    <span style="color: var(--accent-light); font-weight: 600;">Commander Mobile Team</span>
+  </div>
+</div>
+
+<!-- ===== MODALS ===== -->
+
+<!-- Spec Modal -->
+<div class="modal-overlay" id="spec-modal" onclick="if(event.target===this)closeModal('spec-modal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div style="display: flex; align-items: center;">
+        <h3>&#128220; appointments_spec.md</h3>
+        <span class="modal-tag" style="background: var(--blue-bg); color: var(--blue);">For Engineers</span>
+      </div>
+      <button class="modal-close" onclick="closeModal('spec-modal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <h4>1. Executive Summary</h4>
+      <p>Appointment scheduling system &mdash; create, view, edit, cancel, and manage recurring appointments. Integrates with payments, notifications, and client records.</p>
+      <p><strong>User types:</strong> Brand (read-only), Shop Owner/Manager (full CRUD), Barber (own only)</p>
+
+      <hr />
+      <h4>2. Feature Inventory</h4>
+      <table>
+        <thead><tr><th>Flow</th><th>Web</th><th>iOS</th><th>Mobile</th></tr></thead>
+        <tbody>
+          <tr><td>Create Appointment</td><td><code>main/appointments/actions.js</code></td><td><code>Flows/Booking/</code></td><td class="tag-partial">Partial</td></tr>
+          <tr><td>Cancel Appointment</td><td><code>main/appointments/actions.js</code></td><td><code>Flows/AppointmentChanges/</code></td><td class="tag-missing">Missing</td></tr>
+          <tr><td>Recurring</td><td><code>main/appointments/recurring/</code></td><td>N/A (Web only)</td><td class="tag-missing">Missing</td></tr>
+          <tr><td>Detail View</td><td><code>main/appointments/components/</code></td><td><code>Flows/AppointmentDetails/</code></td><td class="tag-done">Done</td></tr>
+        </tbody>
+      </table>
+
+      <hr />
+      <h4>3. TICKET: Create Appointment</h4>
+      <p><strong>Acceptance Criteria:</strong></p>
+      <div class="ac"><div class="ac-box"></div> GIVEN a barber on calendar WHEN they tap "+" THEN form opens with today pre-selected</div>
+      <div class="ac"><div class="ac-box"></div> GIVEN a manager WHEN creating appointment THEN they can select any barber</div>
+      <div class="ac"><div class="ac-box"></div> GIVEN "double booking" OFF WHEN selecting occupied slot THEN shown as unavailable</div>
+
+      <p style="margin-top: 0.8rem;"><strong>API Contracts:</strong></p>
+      <table>
+        <thead><tr><th>Endpoint</th><th>Method</th><th>Include</th></tr></thead>
+        <tbody>
+          <tr><td><code>/v2/appointments</code></td><td>POST</td><td>appointment_service, customer, barber</td></tr>
+          <tr><td><code>/v2/shop/{id}/availability</code></td><td>GET</td><td>slots, barber_schedule</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>Permissions:</strong></p>
+      <table>
+        <thead><tr><th>User</th><th>Can Create</th><th>Scope</th></tr></thead>
+        <tbody>
+          <tr><td>Brand</td><td>No</td><td>Read-only</td></tr>
+          <tr><td>Manager</td><td>Yes</td><td>Any barber in shop</td></tr>
+          <tr><td>Barber</td><td>Yes</td><td>Own calendar only</td></tr>
+        </tbody>
+      </table>
+
+      <hr />
+      <h4>9. Migration Notes</h4>
+      <p>&#8226; Create <code>useCreateAppointment</code> mutation &bull; Zod schema + React Hook Form &bull; Route in <code>routeNames.ts</code> &bull; Check <code>@squire/ui</code> for pickers &bull; Unistyles with semantic tokens</p>
+
+      <p style="color: var(--text-muted); font-style: italic; margin-top: 1rem; font-size: 0.72rem;">... continues with Edit, Cancel, Recurring tickets + API Reference + Edge Cases + Glossary</p>
+    </div>
+  </div>
+</div>
+
+<!-- Jira Modal -->
+<div class="modal-overlay" id="jira-modal" onclick="if(event.target===this)closeModal('jira-modal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div style="display: flex; align-items: center;">
+        <h3>&#127919; appointments_jira.md</h3>
+        <span class="modal-tag" style="background: var(--green-bg); color: var(--green);">For QA</span>
+      </div>
+      <button class="modal-close" onclick="closeModal('jira-modal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <h4>TASK: Create Appointment</h4>
+      <table style="margin-bottom: 0.8rem;">
+        <tbody>
+          <tr><td><strong>Type</strong></td><td>Story</td><td><strong>Priority</strong></td><td>P1</td><td><strong>Status</strong></td><td style="color: var(--orange);">Partial</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>Description</strong></p>
+      <p>Allows a barber or manager to create an appointment by selecting a client, services, date, and time slot. Supports existing clients and walk-ins.</p>
+
+      <hr />
+      <p><strong>Roles &amp; Permissions</strong></p>
+      <table>
+        <thead><tr><th>User</th><th>Access</th><th>Restrictions</th></tr></thead>
+        <tbody>
+          <tr><td>Brand</td><td>Cannot create</td><td>View-only</td></tr>
+          <tr><td>Manager</td><td>Any barber</td><td>Own location only</td></tr>
+          <tr><td>Barber</td><td>Own calendar</td><td>Cannot create for others</td></tr>
+        </tbody>
+      </table>
+
+      <hr />
+      <p><strong>Acceptance Criteria</strong></p>
+      <div class="ac"><div class="ac-box"></div> Form opens with today's date and next available slot pre-selected</div>
+      <div class="ac"><div class="ac-box"></div> User can search for existing client by name, phone, or email</div>
+      <div class="ac"><div class="ac-box"></div> Total price updates when services are added or removed</div>
+      <div class="ac"><div class="ac-box"></div> Unavailable slots are grayed out</div>
+      <div class="ac"><div class="ac-box"></div> Success message appears and calendar updates after saving</div>
+
+      <hr />
+      <p><strong>Testing Notes</strong></p>
+      <p>&#8226; Test with Brand (no create button), Manager, and Barber<br/>
+         &#8226; Test with "Online Booking" enabled and disabled<br/>
+         &#8226; Test walk-in flow (no client)<br/>
+         &#8226; Test on iOS and Android</p>
+
+      <hr />
+      <p><strong>Integration Testing</strong></p>
+      <p>1. Create on mobile &rarr; verify in Web Commander<br/>
+         2. Confirm client notification sent<br/>
+         3. Test double-booking conflict</p>
+
+      <hr />
+      <p><strong>Release Notes</strong></p>
+      <p>Barbers and managers can create appointments from the mobile app with service selection and real-time availability.</p>
+
+      <p style="color: var(--text-muted); font-style: italic; margin-top: 1rem; font-size: 0.72rem;">Zero code references. Written entirely for QA and stakeholders.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openModal(id) { document.getElementById(id).classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow = ''; }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => { m.classList.remove('open'); document.body.style.overflow = ''; }); });
+
+  const obs = new IntersectionObserver(es => { es.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); }); }, { threshold: 0.15 });
+  document.querySelectorAll('.fi').forEach(el => obs.observe(el));
+
+  const dots = document.querySelectorAll('.dots-nav a');
+  const ids = ['s1','s2','s3','s4','s5'];
+  const sobs = new IntersectionObserver(es => { es.forEach(e => { if (e.isIntersecting) { const i = ids.indexOf(e.target.id); if (i >= 0) { dots.forEach(d => d.classList.remove('active')); dots[i]?.classList.add('active'); } } }); }, { threshold: 0.35 });
+  ids.forEach(id => { const el = document.getElementById(id); if (el) sobs.observe(el); });
+</script>
+</body>
+</html>
