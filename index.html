@@ -198,7 +198,6 @@
   <a href="#s3"></a>
   <a href="#s4"></a>
   <a href="#s5"></a>
-  <a href="#s6"></a>
 </div>
 
 <!-- ===== SLIDE 1: Title ===== -->
@@ -242,58 +241,29 @@
   </div>
 </div>
 
-<!-- ===== SLIDE 3: Before vs Now (compact) ===== -->
+<!-- ===== SLIDE 3: How it works ===== -->
 <div class="slide fi" id="s3">
-  <p class="label">Before vs. Now</p>
-  <h2>What changed</h2>
-
-  <div class="cmp">
-    <div class="cmp-panel cmp-before">
-      <div class="tag">Before</div>
-      <ul>
-        <li><span class="b">&#10060;</span> Jira tickets with just a title</li>
-        <li><span class="b">&#10060;</span> No visibility into Web vs iOS differences</li>
-        <li><span class="b">&#10060;</span> No acceptance criteria or testing steps</li>
-        <li><span class="b">&#10060;</span> Engineers re-read legacy code every time</li>
-        <li><span class="b">&#10060;</span> QA asks "what should I test?"</li>
-        <li><span class="b">&#10060;</span> Knowledge lost when people leave</li>
-      </ul>
-    </div>
-    <div class="cmp-panel cmp-after">
-      <div class="tag">Now</div>
-      <ul>
-        <li><span class="b">&#9989;</span> 10 Jira fields filled automatically &mdash; zero manual entry</li>
-        <li><span class="b">&#9989;</span> Web &amp; iOS reconciled in one spec</li>
-        <li><span class="b">&#9989;</span> Acceptance criteria + testing steps</li>
-        <li><span class="b">&#9989;</span> Engineers implement from the spec</li>
-        <li><span class="b">&#9989;</span> QA self-sufficient from day 1</li>
-        <li><span class="b">&#9989;</span> Knowledge lives in Jira forever</li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<!-- ===== SLIDE 4: How it works ===== -->
-<div class="slide fi" id="s4">
   <p class="label">How it works</p>
   <h2>The process</h2>
 
   <div class="flow-row">
-    <div class="fb src">Jira Tickets</div>
+    <div class="fb src">Empty Jira Tickets</div>
     <div class="fa">&#8594;</div>
     <div class="fb sk">/feature-spec</div>
     <div class="fa">&#8594;</div>
     <div class="fb out">2 docs</div>
     <div class="fa">&#8594;</div>
     <div class="fb dst">/upload-jira</div>
+    <div class="fa">&#8594;</div>
+    <div class="fb src">Tickets filled</div>
   </div>
 
   <ul class="bullets">
     <li><span class="b" style="color: var(--blue);">1.</span>
-      <div><strong>Have the Jira tickets</strong><br/><span style="color: var(--text-muted);">With the features/flows to document. Even just a title works.</span></div>
+      <div><strong>Create the Jira tickets</strong><br/><span style="color: var(--text-muted);">One per flow, even just a title is enough (e.g. "Create Appointment", "Cancel Appointment").</span></div>
     </li>
     <li><span class="b" style="color: var(--blue);">2.</span>
-      <div><strong>Run /feature-spec</strong><br/><span style="color: var(--text-muted);">Claude reads Web Commander, cross-references iOS, checks Mobile status.</span></div>
+      <div><strong>Run /feature-spec with ticket IDs</strong><br/><span style="color: var(--text-muted);">Claude reads Web Commander, cross-references iOS, checks Mobile status. Generates two docs.</span></div>
     </li>
     <li><span class="b" style="color: var(--blue);">3.</span>
       <div>
@@ -303,7 +273,7 @@
       </div>
     </li>
     <li><span class="b" style="color: var(--blue);">4.</span>
-      <div><strong>Run /upload-jira</strong><br/><span style="color: var(--text-muted);">Automatically fills 10 Jira fields per ticket. You just confirm.</span></div>
+      <div><strong>Run /upload-jira</strong><br/><span style="color: var(--text-muted);">Automatically fills 10 Jira fields per ticket (AC, testing notes, permissions...). You just confirm.</span></div>
     </li>
   </ul>
 
@@ -313,14 +283,12 @@
       <div class="d"><span class="r"></span><span class="y"></span><span class="gr"></span></div>
       <span style="margin-left: auto;">claude-code</span>
     </div>
-    <div class="term-body"><span class="cmd">$</span> <span class="hi">/feature-spec</span> <span class="ok">Appointments</span>
+    <div class="term-body"><span class="cmd">$</span> <span class="hi">/feature-spec</span> <span class="ok">SQR-3200 Create Appointment, SQR-3201 Cancel, SQR-3202 Recurring</span>
 
-<span class="hi">&#9654; Discovering feature across codebases...</span>
+<span class="hi">&#9654; Analyzing across codebases...</span>
   <span class="fl">&#10003; Web Commander</span>   squire-app/frontend/js/app/main/appointments/
   <span class="fl">&#10003; iOS Commander</span>   ios-commander/.../Flows/Appointments/
   <span class="fl">&#10003; Mobile Commander</span> src/screens/appointments/ <span class="hl">(partial)</span>
-
-<span class="hi">&#9654; Analyzing 5 flows...</span>  Create, Edit, Cancel, Detail, Recurring
 
 <span class="hi">&#9654; Extracting APIs, permissions, validations, edge cases...</span>
 
@@ -328,16 +296,14 @@
   <span class="fl">docs/appointments_spec.md</span>   &#8592; Technical spec (for devs)
   <span class="fl">docs/appointments_jira.md</span>  &#8592; Jira tasks (for QA)
 
-<span class="cmd">$</span> <span class="hi">/upload-jira</span> <span class="ok">SQR-3200, SQR-3201, SQR-3202</span>
+<span class="cmd">$</span> <span class="hi">/upload-jira</span> <span class="ok">appointments SQR-3200, SQR-3201, SQR-3202</span>
 
 <span class="hi">&#9654; Matching tasks to tickets...</span>
-  SQR-3200 &#8594; Create Appointment
-  SQR-3201 &#8594; Cancel Appointment
-  SQR-3202 &#8594; Recurring Appointment
+  SQR-3200 &#8594; Create Appointment  <span class="ok">&#10003; 10 fields updated</span>
+  SQR-3201 &#8594; Cancel Appointment  <span class="ok">&#10003; 10 fields updated</span>
+  SQR-3202 &#8594; Recurring            <span class="ok">&#10003; 10 fields updated</span>
 
-<span class="ok">&#10003; 3 tickets updated automatically</span>
-  <span class="fl">description, acceptance criteria, testing notes,
-  integration testing, release notes, permissions...</span></div>
+<span class="ok">&#10003; Done.</span> Tickets now have description, AC, testing notes, permissions, and more.</div>
   </div>
 
   <div class="stats" style="margin-top: 2rem;">
@@ -347,38 +313,57 @@
   </div>
 </div>
 
-<!-- ===== SLIDE 5: Benefits ===== -->
-<div class="slide fi" id="s5">
-  <p class="label">Benefits</p>
-  <h2>Why use it</h2>
+<!-- ===== SLIDE 4: Before vs Now + Extras ===== -->
+<div class="slide fi" id="s4">
+  <p class="label">Impact</p>
+  <h2>Before vs. Now</h2>
 
-  <ul class="bullets">
-    <li><span class="b" style="color: var(--green);">&#9989;</span>
-      <div><strong>Document features without touching code</strong><br/><span style="color: var(--text-muted);">Existing Web &amp; iOS codebases are the input. Features end up documented in Jira and trackable.</span></div>
+  <div class="cmp">
+    <div class="cmp-panel cmp-before">
+      <div class="tag">Before</div>
+      <ul>
+        <li><span class="b">&#10060;</span> Jira tickets with just a title</li>
+        <li><span class="b">&#10060;</span> No acceptance criteria or testing steps</li>
+        <li><span class="b">&#10060;</span> No visibility into Web vs iOS differences</li>
+        <li><span class="b">&#10060;</span> Engineers re-read legacy code every time</li>
+        <li><span class="b">&#10060;</span> QA asks "what should I test?"</li>
+        <li><span class="b">&#10060;</span> Asking Product for things already defined in code</li>
+      </ul>
+    </div>
+    <div class="cmp-panel cmp-after">
+      <div class="tag">Now</div>
+      <ul>
+        <li><span class="b">&#9989;</span> 10 Jira fields filled automatically</li>
+        <li><span class="b">&#9989;</span> AC, testing notes, and integration scenarios</li>
+        <li><span class="b">&#9989;</span> Web &amp; iOS reconciled in one spec</li>
+        <li><span class="b">&#9989;</span> Engineers implement from the spec</li>
+        <li><span class="b">&#9989;</span> QA self-sufficient from day one</li>
+        <li><span class="b">&#9989;</span> Extracted directly from the source code</li>
+      </ul>
+    </div>
+  </div>
+
+  <ul class="bullets" style="margin-top: 1.5rem;">
+    <li><span class="b" style="color: var(--accent-light);">&#9889;</span>
+      <div><strong>Fully repeatable</strong><br/><span style="color: var(--text-muted);">Requirements changed? Re-run, re-upload. The whole pipeline takes under 15 minutes.</span></div>
     </li>
-    <li><span class="b" style="color: var(--green);">&#9989;</span>
-      <div><strong>Stop asking Product what's already defined</strong><br/><span style="color: var(--text-muted);">Behavior, permissions, validations, and edge cases are already coded. Claude extracts them directly.</span></div>
+    <li><span class="b" style="color: var(--accent-light);">&#9889;</span>
+      <div><strong>Knowledge lives in Jira forever</strong><br/><span style="color: var(--text-muted);">No more tribal knowledge. Features stay documented even when people leave.</span></div>
     </li>
-    <li><span class="b" style="color: var(--green);">&#9989;</span>
-      <div><strong>QA gets a complete testing framework</strong><br/><span style="color: var(--text-muted);">Acceptance criteria, testing notes, integration scenarios, and expected results. All non-technical.</span></div>
-    </li>
-    <li><span class="b" style="color: var(--green);">&#9989;</span>
-      <div><strong>Platform differences become visible</strong><br/><span style="color: var(--text-muted);">Where Web and iOS disagree, it's flagged and decided explicitly instead of discovered during dev.</span></div>
-    </li>
-    <li><span class="b" style="color: var(--green);">&#9989;</span>
-      <div><strong>Repeatable</strong><br/><span style="color: var(--text-muted);">Requirements changed? Re-run, re-upload. The whole pipeline takes minutes.</span></div>
+    <li><span class="b" style="color: var(--accent-light);">&#9889;</span>
+      <div><strong>Specs become context for faster development</strong><br/><span style="color: var(--text-muted);">Stored specs give Claude instant feature knowledge &mdash; no need to re-analyze the codebase. Enables spec-driven development: point to a spec, implement from it.</span></div>
     </li>
   </ul>
 </div>
 
-<!-- ===== SLIDE 6: Two commands, that's it ===== -->
-<div class="slide fi" id="s6">
+<!-- ===== SLIDE 5: Two commands, that's it ===== -->
+<div class="slide fi" id="s5">
   <p class="label">Available Now</p>
   <h2>Two commands, that's it</h2>
 
   <div style="display: flex; flex-direction: column; gap: 1.2rem; align-items: center; margin: 1.5rem 0;">
     <div class="pill" style="font-size: 1.1rem; padding: 0.7rem 1.5rem;">
-      <span class="sl">/</span>feature-spec &lt;FeatureName&gt;
+      <span class="sl">/</span>feature-spec &lt;TICKET-IDs + descriptions&gt;
     </div>
     <div class="pill" style="font-size: 1.1rem; padding: 0.7rem 1.5rem;">
       <span class="sl">/</span>upload-jira &lt;TICKET-IDs&gt;
@@ -534,7 +519,7 @@
   document.querySelectorAll('.fi').forEach(el => obs.observe(el));
 
   const dots = document.querySelectorAll('.dots-nav a');
-  const ids = ['s1','s2','s3','s4','s5','s6'];
+  const ids = ['s1','s2','s3','s4','s5'];
   const sobs = new IntersectionObserver(es => { es.forEach(e => { if (e.isIntersecting) { const i = ids.indexOf(e.target.id); if (i >= 0) { dots.forEach(d => d.classList.remove('active')); dots[i]?.classList.add('active'); } } }); }, { threshold: 0.35 });
   ids.forEach(id => { const el = document.getElementById(id); if (el) sobs.observe(el); });
 </script>
